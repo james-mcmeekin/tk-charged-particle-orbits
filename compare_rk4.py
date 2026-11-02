@@ -20,6 +20,8 @@ def boris_step(x, u, E, B, dt):
     xnew = x + unew * dt / gamma_new
     return xnew, unew
 
+
+#Right hand side of Runge-Kutta method, dy/dt = f(y, t); ignore t variable because it is not used
 def rhs(y, E, B):
     # y = [x, u]; dx/dt = u/gamma, du/dt = q/m (E + v x B)
     u = y[3:]
@@ -66,6 +68,7 @@ for i in range(nsteps):
     boris_x[i], boris_u[i] = xb, ub
 
 # RK4, same dt
+# y is of form [x, y, z, u_x, u_y, u_z]
 y = np.concatenate((x0, u0))
 rk_x = np.zeros((nsteps, 3))
 rk_u = np.zeros((nsteps, 3))
@@ -75,6 +78,8 @@ for i in range(nsteps):
 
 t_gyro = (np.arange(1, nsteps + 1) * dt) / T
 KE0 = kinetic_energy(u0)
+
+#calculate relative kinetic energy error for boris and rk4 methods
 dE_boris = np.abs(kinetic_energy(boris_u) - KE0) / KE0
 dE_rk4 = np.abs(kinetic_energy(rk_u) - KE0) / KE0
 
@@ -95,7 +100,7 @@ ax[0].plot(rk_x[:n_show, 0], rk_x[:n_show, 1], '--', label='RK4')
 ax[0].set_aspect('equal'); ax[0].set_title('First 5 gyroperiods')
 ax[0].set_xlabel('x [m]'); ax[0].set_ylabel('y [m]'); ax[0].legend()
 
-#plots energy error over time (gyroperiods)
+#plots energy error over time (gyroperiods); boris should have energy error of 0.
 ax[1].semilogy(t_gyro, dE_boris, label='Boris')
 ax[1].semilogy(t_gyro, dE_rk4, label='RK4')
 ax[1].set_title('Energy error |ΔKE/KE₀|')

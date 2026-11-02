@@ -20,6 +20,8 @@ def boris_step(x, u, E, B,dt):
     xnew = x + unew * dt / gamma_new                      # new pos
     return xnew, unew
 
+
+#ensures the boris step experiment is ran only when the file is ran; boris_step used in other files
 if __name__ == "__main__":
     # setup ics
     B = np.array([0.0, 0.0, 5.0], dtype = float) # Tesla

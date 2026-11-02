@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np  
 import matplotlib.pyplot as plt
 from borisstep import boris_step
 
@@ -11,7 +11,7 @@ B = np.array([0,0,5], dtype=float)     #Magnetic Field (T)
 E = np.array([1e4,0,0], dtype=float)   #Electric Field (V/m)
 v_perp = 1.0e6
 
-omega_c = q * np.linalg.norm(B) / m_p          # cyclotron frequency
+omega_c = q * np.linalg.norm(B) / m_p          # nonrelativistic cyclotron frequency
 T = 2 * np.pi / omega_c                        # cyclotron gyroperiod
 rho = m_p * v_perp / (q * np.linalg.norm(B))   # analytic gyroradius
 
@@ -30,7 +30,7 @@ for i in range(nsteps):
 
 t = dt * np.arange(nsteps + 1)
 
-# theoretical charge drift: v_d = E x B / B^2 = E/B * (xhat cross zhat) = E/B yhat = 2000 m/s in -y direction
+# theoretical charge drift: v_d = E x B / B^2 = E/B * (xhat cross zhat) = E/B yhat = 2000 m/s in y direction
 v_drift_theory = np.cross(E, B) / np.dot(B, B)
 
 # measured: fit pos(t) = x0 + v_d*t + gyration. Boris rotates by 2*arctan(omega_c*dt/2) per step,
