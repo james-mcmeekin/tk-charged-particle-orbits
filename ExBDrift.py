@@ -4,16 +4,16 @@ from borisstep import boris_step
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
-m_p = 1.67262192e-27     #proton mass, kg
+m = 1.67262192e-27     #proton mass, kg
 
 #ics:
 B = np.array([0,0,5], dtype=float)     #Magnetic Field (T)
 E = np.array([1e4,0,0], dtype=float)   #Electric Field (V/m)
 v_perp = 1.0e6
 
-omega_c = q * np.linalg.norm(B) / m_p          # nonrelativistic cyclotron frequency
+omega_c = q * np.linalg.norm(B) / m          # nonrelativistic cyclotron frequency
 T = 2 * np.pi / omega_c                        # cyclotron gyroperiod
-rho = m_p * v_perp / (q * np.linalg.norm(B))   # analytic gyroradius
+rho = m * v_perp / (q * np.linalg.norm(B))   # analytic gyroradius
 
 n_periods = 20
 steps_per_period = 50

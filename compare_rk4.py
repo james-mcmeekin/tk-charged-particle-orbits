@@ -1,25 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from borisstep import boris_step
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
 m = 1.67262192e-27       #proton mass, kg
 c = 2.99792458e8         #speed of light, m/s
-
-# remade boris step function because import statement will raise TypeError
-def boris_step(x, u, E, B, dt):
-    h = q * dt / (2 * m)
-    u_minus = u + h * E
-    gamma = np.sqrt(1 + np.dot(u_minus, u_minus) / c**2)
-    t = h * B / gamma
-    s = 2 * t / (1 + np.dot(t, t))
-    uprime = u_minus + np.cross(u_minus, t)
-    u_plus = u_minus + np.cross(uprime, s)
-    unew = u_plus + h * E
-    gamma_new = np.sqrt(1 + np.dot(unew, unew) / c**2)
-    xnew = x + unew * dt / gamma_new
-    return xnew, unew
-
 
 #Right hand side of Runge-Kutta method, dy/dt = f(y, t); ignore t variable because it is not used
 def rhs(y, E, B):
