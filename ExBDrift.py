@@ -30,7 +30,7 @@ for i in range(nsteps):
 
 t = dt * np.arange(nsteps + 1)
 
-# theoretical charge drift: v_d = E x B / B^2 = E/B * (xhat cross zhat) = E/B yhat = 2000 m/s in y direction
+# theoretical charge drift: v_d = E x B / B^2 = E/B * (xhat cross zhat) = E/B yhat = 2000 m/s in -y direction
 v_drift_theory = np.cross(E, B) / np.dot(B, B)
 
 # measured: fit pos(t) = x0 + v_d*t + gyration. Boris rotates by 2*arctan(omega_c*dt/2) per step,
