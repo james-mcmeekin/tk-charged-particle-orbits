@@ -33,9 +33,6 @@ nsteps = steps_per_period * n_periods
 x = np.array([0.0, rho, 0.0], dtype=float)       # initial position
 u = np.array([v_perp, 0.0, 0.0], dtype=float)    # initial velocity, allowing gamma ~ 1
 
-# Boris: u lives at half-integer steps (leapfrog), so push u back by dt/2 first
-_, u = boris_step(x, u, E, B_field(x, B0, L), -dt / 2)
-
 traj = np.zeros((nsteps, 3))
 u_traj = np.zeros((nsteps, 3))
 for i in range(nsteps):
