@@ -32,9 +32,11 @@ if __name__ == "__main__":
     T = 2 * np.pi / omega_c                       # cyclotron gyroperiod; period of one full orbit around the magnetic field line.
     rho = m * v_perp / (q * np.linalg.norm(B))    # analytic (accepted) gyroradius; rho = m*v_perp / (|q|*B) 
 
+    n_periods = 5
+    steps_per_period = 50
 
-    dt = T / 50 
-    nsteps = int(5 * T / dt)
+    dt = T / steps_per_period
+    nsteps = steps_per_period * n_periods
 
     x = np.array([0.0, 0.0, 0.0], dtype = float)       # initial position
     u = np.array([0.0, v_perp, 0.0], dtype = float)    # initial velocity, allowing gamma ~ 1

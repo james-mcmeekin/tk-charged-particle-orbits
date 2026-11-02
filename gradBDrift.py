@@ -16,11 +16,16 @@ def B_field(pos, B=B, L=0.2):
     y = pos[1]
     return np.array([B[0], B[1], B[2] * (1 + y / L)], dtype=float)
 
-vperp = 1e6
-rho = m * vperp / (q * np.linalg.norm(B0)) # ~ 2 mm
-L = 100 * rho                              # gradient scale length
+v_perp = 1e6
+
 
 omega_c = np.linalg.norm(B) * q / m
 T = 2 * np.pi / omega_c
-dt = T / 50
-n_gyro = 1000
+rho = m * v_perp / (q * np.linalg.norm(B)) 
+L = 100 * rho                               #gradient scale length
+
+steps_per_period = 50
+n_periods = 1000
+
+dt = T / steps_per_period
+nsteps = steps_per_period * n_periods

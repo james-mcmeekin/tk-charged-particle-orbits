@@ -51,9 +51,11 @@ omega_c = q * np.linalg.norm(B) / m
 T = 2 * np.pi / omega_c
 rho = m * v_perp / (q * np.linalg.norm(B))
 
-dt = T / 50
-n_gyro = 1000
-nsteps = int(n_gyro * T / dt)
+steps_per_period = 50
+n_periods = 1000
+
+dt = T / steps_per_period
+nsteps = steps_per_period * n_periods
 
 x0 = np.zeros(3)
 u0 = np.array([0.0, v_perp, 0.0])
@@ -86,7 +88,7 @@ dE_rk4 = np.abs(kinetic_energy(rk_u) - KE0) / KE0
 r_boris = np.hypot(boris_x[:, 0] - rho, boris_x[:, 1])
 r_rk4 = np.hypot(rk_x[:, 0] - rho, rk_x[:, 1])
 
-print(f"dt = T/{T/dt:.0f}, {n_gyro} gyroperiods, {nsteps} steps")
+print(f"dt = T/{T/dt:.0f}, {n_periods} gyroperiods, {nsteps} steps")
 print(f"final |dE/E|:  Boris = {dE_boris[-1]:.3e}   RK4 = {dE_rk4[-1]:.3e}")
 print(f"final radius error (r-rho)/rho:  Boris = {(r_boris[-1]-rho)/rho:.3e}   RK4 = {(r_rk4[-1]-rho)/rho:.3e}")
 
@@ -94,7 +96,7 @@ fig, ax = plt.subplots(1, 3, figsize=(16, 4.5))
 
 
 # plots position for first 5 gyroperiods
-n_show = int(5 * T / dt)
+n_show = round(5 * steps_per_period)
 ax[0].plot(boris_x[:n_show, 0], boris_x[:n_show, 1], label='Boris')
 ax[0].plot(rk_x[:n_show, 0], rk_x[:n_show, 1], '--', label='RK4')
 ax[0].set_aspect('equal'); ax[0].set_title('First 5 gyroperiods')

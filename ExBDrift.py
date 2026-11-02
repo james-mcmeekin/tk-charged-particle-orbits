@@ -16,8 +16,10 @@ T = 2 * np.pi / omega_c                        # cyclotron gyroperiod
 rho = m_p * v_perp / (q * np.linalg.norm(B))   # analytic gyroradius
 
 n_periods = 20
-dt = T / 50
-nsteps = int(n_periods * T / dt)
+steps_per_period = 50
+
+dt = T / steps_per_period
+nsteps = steps_per_period * n_periods
 
 x = np.array([0.0, 0.0, 0.0], dtype = float)       # initial position
 u = np.array([0.0, v_perp, 0.0], dtype = float)    # initial velocity, allowing gamma ~ 1
