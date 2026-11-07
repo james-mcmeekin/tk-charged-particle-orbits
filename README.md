@@ -87,7 +87,9 @@ $$
     &= \lambda(\mathbf{u}^{-} \times \mathbf{t} + \mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}) \\
 \end{aligned}$$
 
-Let us call $ \mathbf{A} = \mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}$, then we have:
+Let us call 
+$\mathbf{A} = \mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}$
+, then we have:
 
 $$
 \begin{aligned}
@@ -134,7 +136,8 @@ Therefore, returning to the boris step function, we calculate the second half of
 $$
 \begin{aligned}
     \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}
-\end{aligned}$$
+\end{aligned}
+$$
     
 And finally, it performs the second half-kick from the electric field to update the proper velocity:
 
@@ -154,8 +157,11 @@ To put each step in order, the algorithm is as follows:
 4. Calculate the second half of the rotation:
    $\mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}$
 5. Calculate the second half-kick from the electric field:
-    $\mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q \Delta t}{2m}\mathbf{E}$
+   $\mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q \Delta t}{2m}\mathbf{E}$
+
 Which we can update the position of the particle as:
-$
+$$
+\begin{aligned}
     \mathbf{x}_{new} = \mathbf{x} + \frac{\mathbf{u}_{new}}{\gamma_{new}}\Delta t
-$
+\end{aligned}
+$$
