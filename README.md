@@ -2,7 +2,7 @@ This project is a simulated boris pusher for charged particles, with results val
 The results of the simulation are visualized using Matplotlib, and are validated against expected results to ensure accuracy, as well as comparison with the Runge-Kutta method. 
 
 
-In nuclear fusion, the boris pusher algorithm is used to simulate the charged particles within plasma, and is incredibly effective as it conserves energy and momentum, making it suitable for long-term simulations.
+In nuclear fusion, the boris pusher algorithm is used to simulate the charged particles within plasma, and is incredibly effective as it conserves |u|, the magnitude of the proper velocity,  making it suitable for long-term simulations.
 
 The algorithm works by splitting the motion of the particles into two parts: the acceleration from the magnetic field, and the acceleration from the electric field. 
 It first updates the velocity of the particles with a "half-kick" from the electric field, then applies a rotation due to the magnetic field, and finally updates the velocity again with another "half-kick" from the electric field. This method ensures that the particles' motion is accurately represented over time. 
@@ -27,9 +27,10 @@ $$
    \mathbf{F} = \frac{d\mathbf{p}}{dt} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}) \\
    \frac{d\mathbf{p}}{dt} = m\frac{d\mathbf{v}}{dt}  \\
    \frac{d\mathbf{v}}{dt} = \frac{q}{m}(\mathbf{E} + \mathbf{v} \times \mathbf{B})
-\end{aligned}$$  
+\end{aligned}
+$$  
 
-In this algorithm, we define the velocity of the particle as $$\mathbf{u} = \gamma \mathbf{v}$$, otherwise known as the "proper velocity"
+In this algorithm, we define the velocity of the particle as $\mathbf{u} = \gamma \mathbf{v}$, otherwise known as the "proper velocity"
 Therefore the equations of motion can be rewritten in terms of the proper velocity (also known as the relativistic form of the Lorentz force) as:
 
 $$\begin{aligned}
@@ -50,12 +51,12 @@ It then performs half of the rotation due to the magnetic field:
 $$
 \begin{aligned}
     \mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B} \\
-    \mathbf{u}^{'} = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}
+    \mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}
 \end{aligned}
 $$
 
 Let us define $\mathbf{u}^{+}$ as the final proper velocity after the rotation.
-To calculate the second half of the rotation, the second rotation factor $$\mathbf{s}$$ found by the rotation condition:
+To calculate the second half of the rotation, the second rotation factor $\mathbf{s}$ found by the rotation condition:
 
 $$
 \begin{aligned}
@@ -66,7 +67,7 @@ We know that the second half of the rotation is given by:
 
 $$
 \begin{aligned}
-    \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}^{'} \times \mathbf{s}
+    \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}
 \end{aligned}$$
 
 To solve for $\mathbf{s}$, we first assume $\mathbf{s} = \lambda \mathbf{t}$, where $\lambda$ is a scalar.
@@ -74,23 +75,23 @@ Substituting $u^{+}$ into the rotation condition, we have:
 
 $$
 \begin{aligned}
-    \mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t} - \mathbf{u}^{-} = (\mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t} + \mathbf{u}^{-}) \times \mathbf{t} \\
-    \mathbf{u}^{'} \times \lambda \mathbf{t} = (2\mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t}) \times \mathbf{t}
+    \mathbf{u}^{-} + \mathbf{u}' \times \lambda \mathbf{t} - \mathbf{u}^{-} = (\mathbf{u}^{-} + \mathbf{u}' \times \lambda \mathbf{t} + \mathbf{u}^{-}) \times \mathbf{t} \\
+    \mathbf{u}' \times \lambda \mathbf{t} = (2\mathbf{u}^{-} + \mathbf{u}' \times \lambda \mathbf{t}) \times \mathbf{t}
 \end{aligned}$$
 
-First solving for $\mathbf{u}^{'} \times \lambda\mathbf{t}$:
+First solving for $\mathbf{u}' \times \lambda\mathbf{t}$:
 
 $$
 \begin{aligned}
-    \mathbf{u}^{'} \times \mathbf{s} &= \mathbf{u}^{-} \times \lambda\mathbf{t} + (\mathbf{u}^{-} \times \mathbf{t}) \times \lambda\mathbf{t} \\
+    \mathbf{u}' \times \mathbf{s} &= \mathbf{u}^{-} \times \lambda\mathbf{t} + (\mathbf{u}^{-} \times \mathbf{t}) \times \lambda\mathbf{t} \\
     &= \lambda(\mathbf{u}^{-} \times \mathbf{t} + \mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}) \\
 \end{aligned}$$
 
-Let us call $ \mathbf{A} = \mathbf{u}^{-} \times \mathbf{t} + \mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}$, then we have:
+Let us call $ \mathbf{A} = \mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}$, then we have:
 
 $$
 \begin{aligned}
-    \mathbf{u}^{'} \times \lambda\mathbf{t} = \mathbf{A}\lambda
+    \mathbf{u}' \times \lambda\mathbf{t} = \mathbf{A}\lambda
 \end{aligned}$$
     
 
@@ -99,7 +100,7 @@ Solving the right hand side of the rotation condition:
 $$
 \begin{aligned}
     (2\mathbf{u}^{-}+\mathbf{A}\lambda) \times \mathbf{t} &= 2\mathbf{u}^{-} \times \mathbf{t} + \mathbf{A}\lambda \times \mathbf{t} \\
-    &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} \times \mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}\times \mathbf{t})) \\4
+    &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} \times \mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}\times \mathbf{t})) \\
     &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}\times \mathbf{t})) \\
 \end{aligned}$$
 
@@ -107,9 +108,9 @@ Therefore we have:
 
 $$
 \begin{aligned}
-    \mathbf{A}\lambda &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - (\mathbf{t}^{2}(\mathbf{u}^{-}\times \mathbf{t}))) \\
+    \mathbf{A}\lambda = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - (\mathbf{t}^{2}(\mathbf{u}^{-}\times \mathbf{t}))) \\
     \lambda(\mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}) = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - \mathbf{t}^{2}(\mathbf{u}^{-}\times \mathbf{t}))
-    \lambda(\mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}) = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-} + \mathbf{t^2}(\mathbf{u}^{-}\times \mathbf{t})) \\
+    \lambda(\mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}) = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-} - \mathbf{t^2}(\mathbf{u}^{-}\times \mathbf{t})) \\
 \end{aligned}$$
     
 Canceling equal terms:
@@ -131,7 +132,7 @@ Therefore, returning to the boris step function, we calculate the second half of
 
 $$
 \begin{aligned}
-    \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}^{'} \times \mathbf{s}
+    \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}
 \end{aligned}$$
     
 And finally, it performs the second half-kick from the electric field to update the proper velocity:
@@ -148,9 +149,9 @@ To put each step in order, the algorithm is as follows:
    $\mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B}$
    $\mathbf{s} = \frac{2\mathbf{t}}{1+\mathbf{t}^2}$
 3. Calculate the first half of the rotation:
-   $\mathbf{u}^{'} = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}$
+   $\mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}$
 4. Calculate the second half of the rotation:
-   $\mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}^{'} \times \mathbf{s}$
+   $\mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}$
 5. Calculate the second half-kick from the electric field:
     $\mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q \Delta t}{2m}\mathbf{E}$
 Which we can update the position of the particle as:
