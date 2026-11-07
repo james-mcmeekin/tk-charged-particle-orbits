@@ -21,18 +21,17 @@ Where:
 - $\mathbf{v}$ is the velocity of the particle, measured in meters per second (m/s),
 - $\mathbf{B}$ is the magnetic field, measured in Tesla (T).
 
-We can set this up into a system of ordinary differential equations (ODEs) that describe the motion of the particle. The Boris algorithm is then used to numerically integrate these ODEs over time, allowing us to simulate the trajectory of the charged particle in the presence of electric and magnetic fields.
+
+In this algorithm, we define the velocity of the particle as $\mathbf{u} = \gamma \mathbf{v}$, otherwise known as the "proper velocity" where $\gamma$ is the relativistic gamma factor given by:
 
 $$
 \begin{aligned}
-   \mathbf{F} = \frac{d\mathbf{p}}{dt} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}) \\
-   \frac{d\mathbf{p}}{dt} = m\frac{d\mathbf{v}}{dt}  \\
-   \frac{d\mathbf{v}}{dt} = \frac{q}{m}(\mathbf{E} + \mathbf{v} \times \mathbf{B})
+    \gamma &= \frac{1}{\sqrt{1-\frac{\mathbf{v}^2}{c^2}}} \\
+           &= \sqrt{1+\frac{\mathbf{u}^2}{c^2}}
 \end{aligned}
-$$  
+$$
 
-In this algorithm, we define the velocity of the particle as $\mathbf{u} = \gamma \mathbf{v}$, otherwise known as the "proper velocity"
-Therefore the equations of motion can be rewritten in terms of the proper velocity (also known as the relativistic form of the Lorentz force) as:
+Therefore we can write a relativistic set of equations of motion:
 
 $$\begin{aligned}
     \frac{d\mathbf{u}}{dt} = \frac{q}{m}(\mathbf{E} + \frac{\mathbf{u}}{\gamma} \times \mathbf{B}) \\
@@ -40,9 +39,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 
-For each step over time 
-$ \Delta t $
-, the algorithm takes in the initial proper velocity $\mathbf{u}$ and performs the first half-kick from the electric field:
+For each step over time $\Delta t$, the algorithm takes in the initial proper velocity $\mathbf{u}$ and performs the first half-kick from the electric field:
 
 $$
 \begin{aligned}
@@ -58,7 +55,9 @@ $$
 \end{aligned}
 $$
 
-Let us define $\mathbf{u}^{+}$ as the final proper velocity after the rotation.
+Where $\gamma^{-} = \sqrt{1+\frac{\mathbf{u}^{-2}}{c^2}}$.
+
+Next, Let us define $\mathbf{u}^{+}$ as the final proper velocity after the rotation.
 To calculate the second half of the rotation, the second rotation factor $\mathbf{s}$ found by the rotation condition:
 
 $$
@@ -150,10 +149,11 @@ $$
 \end{aligned}$$
 
 To put each step in order, the algorithm is as follows:
-1. Calculate the half-kick from the electric field:
+1. Calculate the first half-kick from the electric field:
    $\mathbf{u}^{-} = \mathbf{u} + \frac{q\Delta t}{2m}\mathbf{E}$
 2. Calculate the rotation vectors:
    $\mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B}$
+   ,
    $\mathbf{s} = \frac{2\mathbf{t}}{1+\mathbf{t}^2}$
 3. Calculate the first half of the rotation:
    $\mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}$
