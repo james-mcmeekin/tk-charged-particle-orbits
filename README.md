@@ -8,9 +8,10 @@ The algorithm works by splitting the motion of the particles into two parts: the
 It first updates the velocity of the particles with a "half-kick" from the electric field, then applies a rotation due to the magnetic field, and finally updates the velocity again with another "half-kick" from the electric field. This method ensures that the particles' motion is accurately represented over time. 
 
 The equation that defines the motion of a charged particle in an electromagnetic field is given by the Lorentz force law:
-\begin{align*}
+$$
+\begin{aligned}
    \mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}) 
-\end{align*}
+\end{aligned}$$
 
 Where:
 -  $\mathbf{F}$ is the force acting on the particle, measured in newtons (N),
@@ -21,109 +22,124 @@ Where:
 
 We can set this up into a system of ordinary differential equations (ODEs) that describe the motion of the particle. The Boris algorithm is then used to numerically integrate these ODEs over time, allowing us to simulate the trajectory of the charged particle in the presence of electric and magnetic fields.
 
-\begin{align*}
+$$
+\begin{aligned}
    \mathbf{F} = \frac{d\mathbf{p}}{dt} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}) \\
    \frac{d\mathbf{p}}{dt} = m\frac{d\mathbf{v}}{dt}  \\
    \frac{d\mathbf{v}}{dt} = \frac{q}{m}(\mathbf{E} + \mathbf{v} \times \mathbf{B})
-\end{align*}  
+\end{aligned}$$  
 
 In this algorithm, we define the velocity of the particle as $$\mathbf{u} = \gamma \mathbf{v}$$, otherwise known as the "proper velocity"
 Therefore the equations of motion can be rewritten in terms of the proper velocity (also known as the relativistic form of the Lorentz force) as:
 
-\begin{align*}
+$$\begin{aligned}
     \frac{d\mathbf{u}}{dt} = \frac{q}{m}(\mathbf{E} + \frac{\mathbf{u}}{\gamma} \times \mathbf{B}) \\
     \frac{d\mathbf{x}}{dt} = \frac{\mathbf{u}}{\gamma}
-\end{align*}
+\end{aligned}$$
 
 
 For each step over time $ \Delta t $, the algorithm takes in the initial proper velocity $\mathbf{u}$ and performs the first half-kick from the electric field:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{-} = \mathbf{u} + \frac{q\Delta t}{2m}\mathbf{E}
-\end{align*}
+\end{aligned}$$
 
 It then performs half of the rotation due to the magnetic field:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B} \\
     \mathbf{u}^{'} = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}
-\end{align*}
+\end{aligned}
+$$
 
 Let us define $\mathbf{u}^{+}$ as the final proper velocity after the rotation.
 To calculate the second half of the rotation, the second rotation factor $$\mathbf{s}$$ found by the rotation condition:
 
-\begin{align*}
+$$
+\begin{aligned}
  \mathbf{u}^{+} - \mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times t
-\end{align*}
+\end{aligned}$$
 
 We know that the second half of the rotation is given by:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}^{'} \times \mathbf{s}
-\end{align*}
+\end{aligned}$$
 
 To solve for $\mathbf{s}$, we first assume $\mathbf{s} = \lambda \mathbf{t}$, where $\lambda$ is a scalar.
 Substituting $u^{+}$ into the rotation condition, we have:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t} - \mathbf{u}^{-} = (\mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t} + \mathbf{u}^{-}) \times \mathbf{t} \\
     \mathbf{u}^{'} \times \lambda \mathbf{t} = (2\mathbf{u}^{-} + \mathbf{u}^{'} \times \lambda \mathbf{t}) \times \mathbf{t}
-\end{align*}
+\end{aligned}$$
 
 First solving for $\mathbf{u}^{'} \times \lambda\mathbf{t}$:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{'} \times \mathbf{s} &= \mathbf{u}^{-} \times \lambda\mathbf{t} + (\mathbf{u}^{-} \times \mathbf{t}) \times \lambda\mathbf{t} \\
     &= \lambda(\mathbf{u}^{-} \times \mathbf{t} + \mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}) \\
-\end{align*}
+\end{aligned}$$
 
 Let us call $ \mathbf{A} = \mathbf{u}^{-} \times \mathbf{t} + \mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}$, then we have:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{'} \times \lambda\mathbf{t} = \mathbf{A}\lambda
-\end{align*}
+\end{aligned}$$
     
 
 Solving the right hand side of the rotation condition:
 
-\begin{align*}
+$$
+\begin{aligned}
     (2\mathbf{u}^{-}+\mathbf{A}\lambda) \times \mathbf{t} &= 2\mathbf{u}^{-} \times \mathbf{t} + \mathbf{A}\lambda \times \mathbf{t} \\
     &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} \times \mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}\times \mathbf{t})) \\4
     &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - (\mathbf{t}^{2}\mathbf{u}^{-}\times \mathbf{t})) \\
-\end{align*}
+\end{aligned}$$
 
 Therefore we have:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{A}\lambda &= 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - (\mathbf{t}^{2}(\mathbf{u}^{-}\times \mathbf{t}))) \\
     \lambda(\mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}) = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\times \mathbf{t}) \times \mathbf{t} - \mathbf{t}^{2}(\mathbf{u}^{-}\times \mathbf{t}))
     \lambda(\mathbf{u}^{-} \times \mathbf{t} + (\mathbf{u}^{-} \cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-}) = 2\mathbf{u}^{-} \times \mathbf{t} + \lambda((\mathbf{u}^{-}\cdot \mathbf{t})\mathbf{t} - \mathbf{t}^{2}\mathbf{u}^{-} + \mathbf{t^2}(\mathbf{u}^{-}\times \mathbf{t})) \\
-\end{align*}
+\end{aligned}$$
     
 Canceling equal terms:
 
-\begin{align*}
+$$
+\begin{aligned}
     \lambda\mathbf{u}^-\times\mathbf{t} = 2\,\mathbf{u}^-\times\mathbf{t} - \lambda t^2\,\mathbf{u}^-\times\mathbf{t} \\
     \implies \lambda(t^2+1)=2 \\
     \implies \lambda = \frac{2}{1+t^2}
-\end{align*}
+\end{aligned}$$
 Therefore
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{s} = \frac{2\mathbf{t}}{1+t^2}
-\end{align*}
+\end{aligned}$$
     
 Therefore, returning to the boris step function, we calculate the second half of the rotation as:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}^{'} \times \mathbf{s}
-\end{align*}
+\end{aligned}$$
     
 And finally, it performs the second half-kick from the electric field to update the proper velocity:
 
-\begin{align*}
+$$
+\begin{aligned}
     \mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q\Delta t}{2m}\mathbf{E}
-\end{align*}
+\end{aligned}$$
 
 To put each step in order, the algorithm is as follows:
 1. Calculate the half-kick from the electric field:
