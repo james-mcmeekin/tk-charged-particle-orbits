@@ -8,6 +8,7 @@ The algorithm works by splitting the motion of the particles into two parts: the
 It first updates the velocity of the particles with a "half-kick" from the electric field, then applies a rotation due to the magnetic field, and finally updates the velocity again with another "half-kick" from the electric field. This method ensures that the particles' motion is accurately represented over time. 
 
 The equation that defines the motion of a charged particle in an electromagnetic field is given by the Lorentz force law:
+
 $$
 \begin{aligned}
    \mathbf{F} = q(\mathbf{E} + \mathbf{v} \times \mathbf{B}) 
@@ -39,7 +40,9 @@ $$\begin{aligned}
 \end{aligned}$$
 
 
-For each step over time $ \Delta t $, the algorithm takes in the initial proper velocity $\mathbf{u}$ and performs the first half-kick from the electric field:
+For each step over time 
+$ \Delta t $
+, the algorithm takes in the initial proper velocity $\mathbf{u}$ and performs the first half-kick from the electric field:
 
 $$
 \begin{aligned}
@@ -119,7 +122,7 @@ Canceling equal terms:
 
 $$
 \begin{aligned}
-    \lambda\mathbf{u}^-\times\mathbf{t} = 2\,\mathbf{u}^-\times\mathbf{t} - \lambda t^2\,\mathbf{u}^-\times\mathbf{t} \\
+    \lambda(\mathbf{u}^{-} \times \mathbf{t}) = 2(\mathbf{u}^{-} \times \mathbf{t}) - \lambda(t^2\mathbf{u}^{-} \times \mathbf{t}) \\
     \implies \lambda(t^2+1)=2 \\
     \implies \lambda = \frac{2}{1+t^2}
 \end{aligned}$$
@@ -160,6 +163,7 @@ To put each step in order, the algorithm is as follows:
    $\mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q \Delta t}{2m}\mathbf{E}$
 
 Which we can update the position of the particle as:
+
 $$
 \begin{aligned}
     \mathbf{x}_{new} = \mathbf{x} + \frac{\mathbf{u}_{new}}{\gamma_{new}}\Delta t
