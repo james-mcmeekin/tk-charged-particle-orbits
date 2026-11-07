@@ -46,7 +46,7 @@ $$
     \mathbf{u}^{-} = \mathbf{u} + \frac{q\Delta t}{2m}\mathbf{E}
 \end{aligned}$$
 
-It then performs half of the rotation due to the magnetic field:
+It then calculates the intermediate vector $\mathbf{u}'$ that is used to calculate the full rotation:
 
 $$
 \begin{aligned}
@@ -155,9 +155,9 @@ To put each step in order, the algorithm is as follows:
    $\mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B}$
    ,
    $\mathbf{s} = \frac{2\mathbf{t}}{1+\mathbf{t}^2}$
-3. Calculate the first half of the rotation:
+3. Calculate the intermediate rotation vector:
    $\mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}$
-4. Calculate the second half of the rotation:
+4. Calculate the rotation:
    $\mathbf{u}^{+} = \mathbf{u}^{-} + \mathbf{u}' \times \mathbf{s}$
 5. Calculate the second half-kick from the electric field:
    $\mathbf{u}_{new} = \mathbf{u}^{+} + \frac{q \Delta t}{2m}\mathbf{E}$
