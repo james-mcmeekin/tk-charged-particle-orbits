@@ -55,7 +55,7 @@ $$
 \end{aligned}
 $$
 
-Where $\gamma^{-} = \sqrt{1+\frac{\mathbf{u}^{-2}}{c^2}}$.
+Where $\gamma^{-} = \sqrt{1+\frac{(\mathbf{u}^{-})^2}{c^2}}$.
 
 Next, Let us define $\mathbf{u}^{+}$ as the final proper velocity after the rotation.
 To calculate the second half of the rotation, the second rotation factor $\mathbf{s}$ found by the rotation condition:
