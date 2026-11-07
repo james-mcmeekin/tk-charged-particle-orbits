@@ -11,9 +11,9 @@ def boris_step(x, u, E, B,dt):
     h = q * dt / (2 * m)                                  # half electric kick
     u_minus = u + h * E                                   # first intial half electric kick
     gamma = np.sqrt(1 + np.dot(u_minus, u_minus) / c**2)  # relativistic gamma factor
-    t = h * B / gamma                                     # rotation vector
+    t = h * B / gamma                                     # first half rotation 
     s = 2 * t / (1 + np.dot(t, t)) 
-    uprime = u_minus + np.cross(u_minus, t)               # rotation
+    uprime = u_minus + np.cross(u_minus, t)               # second half rotation
     u_plus = u_minus + np.cross(uprime, s)                     
     unew = u_plus + h * E                                 # half electric kick
     gamma_new = np.sqrt(1 + np.dot(unew, unew) / c**2)      
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     nsteps = steps_per_period * n_periods
 
     x = np.array([0.0, 0.0, 0.0], dtype = float)       # initial position
-    u = np.array([0.0, v_perp, 0.0], dtype = float)    # initial velocity, allowing gamma ~ 1
+    u = np.array([0.0, v_perp, 0.0], dtype = float)    # initial momentum, allowing gamma ~ 1
 
     traj = np.zeros((nsteps, 3))
     for i in range(nsteps):
