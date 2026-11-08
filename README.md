@@ -203,4 +203,13 @@ Rather than $\frac{\omega_c \cdot \Delta t}{\gamma}$, where $\omega_c = \frac{q|
 
 Implementation Notes to borisstep.py
 
+For accurate position updating, we have to adjust $\mathbf{u}$ by a half-step backwards in time before starting borisstep. This is because we want the velocity at the midpoint between $\Delta t_n$ and $\Delta t_{n+1}$, meaning to adjust $\mathbf{x}_{0} \to \mathbf{x}_{1}$, we want $\mathbf{u}_{\frac{1}{2}}$.
+That is, to update the position correctly, we actually compute:
 
+$$
+\begin{aligned}
+    \mathbf{x}_{n+1} = \mathbf{x}_{n}+ \frac{\mathbf{u}_{n+\frac{1}{2}}}{\gamma_{n+\frac{1}{2}}}\Delta t
+\end{aligned}
+$$
+
+So to initially get $\mathbf{u}_{-\frac{1}{2}}$, we call the `borisstep` function with a negative half-step ($-\frac{\Delta t}{2}$) in time via init_half_back(). If this weren't implemented, then we would have a startup error of $O(\delta t)$, which would take precedent over the algorithms actual error of $O(\delta t^2)$.
