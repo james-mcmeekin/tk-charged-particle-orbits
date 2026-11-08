@@ -63,7 +63,7 @@ ax[0].set_xlabel('x [m]'); ax[0].set_ylabel('y [m]')
 # period-averaged x vs time with predicted drift
 ax[1].plot(t_avg / T, x_avg, '.', label='simulated (period avg)')
 ax[1].plot(t_avg / T, x_avg[0] + v_pred * t_avg, '--', label=f'predicted ({v_pred:.0f} m/s)')
-ax[1].set_title('Guiding-centre x vs time')
+ax[1].set_title('Guiding-center x vs time')
 ax[1].set_xlabel('gyroperiods'); ax[1].set_ylabel('<x> [m]'); ax[1].legend()
 
 t_gyro = np.arange(1, nsteps + 1) * dt / T

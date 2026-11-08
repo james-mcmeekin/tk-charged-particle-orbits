@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     omega_c = q * np.linalg.norm(B) / m                   # cyclotron frequency; how many times a particle "orbits" magnetic field line.
     T = 2 * np.pi / omega_c                               # cyclotron gyroperiod; period of one full orbit around the magnetic field line.
-    rho = gamma * m * v_perp / (q * np.linalg.norm(B))    # analytic (accepted) gyroradius; rho = m*v_perp / (|q|*B) 
+    rho = gamma * v_perp / omega_c                        # analytic (accepted) gyroradius; rho = gamma*m*v_perp / (|q|*B)
 
     n_periods = 5
     steps_per_period = 50

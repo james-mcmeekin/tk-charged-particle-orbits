@@ -32,10 +32,11 @@ def kinetic_energy(u):
 B = np.array([0.0, 0.0, 5.0])
 E = np.array([0.0, 0.0, 0.0])
 v_perp = 1.0e6
+gamma = 1 / np.sqrt(1 - v_perp**2 / c**2)
 
 omega_c = q * np.linalg.norm(B) / m
 T = 2 * np.pi / omega_c
-rho = m * v_perp / (q * np.linalg.norm(B))
+rho = gamma * v_perp / omega_c
 
 steps_per_period = 50
 n_periods = 1000
@@ -71,6 +72,7 @@ KE0 = kinetic_energy(u0)
 #calculate relative kinetic energy error for boris and rk4 methods
 dE_boris = np.abs(kinetic_energy(boris_u) - KE0) / KE0
 dE_rk4 = np.abs(kinetic_energy(rk_u) - KE0) / KE0
+
 
 r_boris = np.hypot(boris_x[:, 0] - rho, boris_x[:, 1])
 r_rk4 = np.hypot(rk_x[:, 0] - rho, rk_x[:, 1])
