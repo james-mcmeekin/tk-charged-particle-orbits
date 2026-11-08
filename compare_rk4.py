@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from borisstep import boris_step
+from borisstep import boris_step, init_half_back
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
@@ -44,11 +44,12 @@ dt = T / steps_per_period
 nsteps = steps_per_period * n_periods
 
 x0 = np.zeros(3)
-u0 = np.array([0.0, v_perp, 0.0])
+v0 = np.array([0.0, v_perp, 0.0])
+u0 = v0 / np.sqrt(1 - np.dot(v0, v0) / c**2)   # u = gamma * v, shared by Boris and RK4
 
 # Boris: u lives at half-integer steps (leapfrog), so push u back by dt/2 first
-xb, ub = x0.copy(), u0.copy()
-_, ub = boris_step(xb, ub, E, B, -dt / 2)
+xb = x0.copy()
+ub = init_half_back(xb, v0, E, B, dt)   # u(-dt/2) from v(0)
 boris_x = np.zeros((nsteps, 3))
 boris_u = np.zeros((nsteps, 3))
 for i in range(nsteps):

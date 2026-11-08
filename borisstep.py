@@ -20,10 +20,11 @@ def boris_step(x, u, E, B,dt):
     xnew = x + unew * dt / gamma_new                      # new pos
     return xnew, unew
 
-def init_half_back(x0,v0, E, B, dt):
-    gamma0 = np.sqrt(1 + np.dot(v0, v0) / c**2)  # initial relativistic gamma factor 
-    u0 = v0 * gamma0  # initial true velocity
-    _, uback = boris_step(x0, u0, E, B, -dt / 2) #discard position output, step back u by dt/2 
+def init_half_back(x0, v0, E, B, dt):
+    """given v(0) (ordinary velocity), return u(-dt/2) so that boris_step(x0, u(-dt/2), ...) yields u(+dt/2), x(dt)."""
+    gamma0 = 1 / np.sqrt(1 - np.dot(v0, v0) / c**2)  # gamma from ordinary velocity v (not u)
+    u0 = v0 * gamma0                                 # u = gamma * v
+    _, uback = boris_step(x0, u0, E, B, -dt / 2)     # Boris is time-reversible: negative dt/2 steps u back by dt/2; position output discarded
     return uback
 
 

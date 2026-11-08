@@ -1,6 +1,6 @@
 import numpy as np  
 import matplotlib.pyplot as plt
-from borisstep import boris_step
+from borisstep import boris_step, init_half_back
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
@@ -22,7 +22,8 @@ dt = T / steps_per_period
 nsteps = steps_per_period * n_periods
 
 x = np.array([0.0, 0.0, 0.0], dtype = float)       # initial position
-u = np.array([0.0, v_perp, 0.0], dtype = float)    # initial velocity, allowing gamma ~ 1
+v0 = np.array([0.0, v_perp, 0.0], dtype = float)   # initial velocity v(0)
+u = init_half_back(x, v0, E, B, dt)                # u(-dt/2), so the first boris_step gives u(+dt/2) and x(dt)
 
 traj = np.zeros((nsteps + 1, 3))                   # traj[0] is the starting point
 traj[0] = x

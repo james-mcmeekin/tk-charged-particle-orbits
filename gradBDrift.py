@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from borisstep import boris_step
+from borisstep import boris_step, init_half_back
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
@@ -31,7 +31,8 @@ nsteps = steps_per_period * n_periods
 
 # position and velocity such that the particles guiding center is at origin
 x = np.array([0.0, rho, 0.0], dtype=float)       # initial position
-u = np.array([v_perp, 0.0, 0.0], dtype=float)    # initial velocity, allowing gamma ~ 1
+v0 = np.array([v_perp, 0.0, 0.0], dtype=float)   # initial velocity v(0)
+u = init_half_back(x, v0, E, B_field(x, B0, L), dt)   # u(-dt/2), using the field at x(0)
 
 traj = np.zeros((nsteps, 3))
 u_traj = np.zeros((nsteps, 3))

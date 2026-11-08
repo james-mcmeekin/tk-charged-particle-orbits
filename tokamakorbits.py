@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from borisstep import boris_step
+from borisstep import boris_step, init_half_back
 
 #consts (SI)
 q = 1.602176634e-19      #proton charge, C
@@ -42,7 +42,7 @@ x_hat = np.array([1.0, 0.0, 0.0], dtype=float)
 
 e1 = x_hat - np.dot(x_hat, b_hat) * b_hat       # component of x_hat perpendicular to b_hat
 e1 = e1 / np.linalg.norm(e1)
-u = v0 * (xi * b_hat + np.sqrt(1 - xi**2) * e1)
+v_init = v0 * (xi * b_hat + np.sqrt(1 - xi**2) * e1)   # initial velocity v(0)
 
 
 omega_c = B0 * q / m                            # on-axis cyclotron frequency (B0 is a scalar)
@@ -55,6 +55,8 @@ n_periods = 20000                # ~ a few bounce periods for a trapped particle
 dt = T / steps_per_period
 nsteps = steps_per_period * n_periods
 
+# u(-dt/2), using the field at x(0), so the first boris_step gives u(+dt/2) and x(dt)
+u = init_half_back(x, v_init, E, B_tokamak(x, B0=B0, R0=R0, q_safety=q_safety), dt)
 
 traj = np.zeros((nsteps, 3))
 u_traj = np.zeros((nsteps, 3))
