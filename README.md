@@ -2,7 +2,7 @@ This project is a simulated boris pusher for charged particles, with results val
 The results of the simulation are visualized using Matplotlib, and are validated against expected results to ensure accuracy, as well as comparison with the Runge-Kutta method. 
 
 
-In nuclear fusion, the boris pusher algorithm is used to simulate the charged particles within plasma, and is incredibly effective as it conserves |u|, the magnitude of the proper velocity,  making it suitable for long-term simulations.
+In nuclear fusion, the boris pusher algorithm is used to simulate the charged particles within plasma, and is incredibly effective as it conserves |u|, the magnitude of the proper velocity, through rotation exactly, making it suitable for long-term simulations.
 
 The algorithm works by splitting the motion of the particles into two parts: the acceleration from the magnetic field, and the acceleration from the electric field. 
 It first updates the velocity of the particles with a "half-kick" from the electric field, then applies a rotation due to the magnetic field, and finally updates the velocity again with another "half-kick" from the electric field. This method ensures that the particles' motion is accurately represented over time. 
@@ -62,7 +62,7 @@ To calculate the second half of the rotation, the second rotation factor $\mathb
 
 $$
 \begin{aligned}
- \mathbf{u}^{+} - \mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times t
+ \mathbf{u}^{+} - \mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t}
 \end{aligned}$$
 
 We know that the second half of the rotation is given by:
@@ -169,3 +169,38 @@ $$
     \mathbf{x}_{new} = \mathbf{x} + \frac{\mathbf{u}_{new}}{\gamma_{new}}\Delta t
 \end{aligned}
 $$
+
+We can also see how $\mathbf{|u|}$ is conserved through the rotation algorithm:
+
+$$
+\begin{aligned}
+    \mathbf{u}^{+}-\mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t}
+    (\mathbf{u}^{+}-\mathbf{u}^{-}) \cdot (\mathbf{u}^{+} + \mathbf{u}^{-}) = ((\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t}) \cdot (\mathbf{u}^{+} + \mathbf{u}^{-}) \\
+\end{aligned}
+$$
+
+On the right hand side, the cross product term is by definition perpendicular to $(\mathbf{u}^{+} + \mathbf{u}^{-})$, and therefore:
+
+$$
+\begin{aligned}
+    (\mathbf{u}^{+}-\mathbf{u}^{-}) \cdot (\mathbf{u}^{+} + \mathbf{u}^{-}) = 0 \\
+    \implies |\mathbf{u}^{+}|^2 - |\mathbf{u}^{-}|^2 = 0 \\
+    \implies |\mathbf{u}^{+}| = |\mathbf{u}^{-}|
+\end{aligned}
+$$
+
+So magnitude is clearly preserved through rotation. Magnitude will therefore only change in the presence of an electric field (i.e $\mathbf{E}\neq 0$), which is why we calculate a new gamma factor after the second half-kick to update the position correctly.
+
+One caveat to the boris algorithm, is that the rotation angle is calculated as:
+
+$$
+\begin{aligned}
+    \theta = 2 \arctan(|\mathbf{t}|)
+\end{aligned}
+$$
+
+Rather than $\frac{\omega_c \cdot \Delta t}{\gamma}$, where $\omega_c = \frac{q|\mathbf{B}|}{m}$, denoted as the Cyclotron frequency, and that error is the source of the bounded error we see when comparing to RK4.
+
+Implementation Notes to borisstep.py
+
+
