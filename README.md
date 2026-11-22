@@ -51,14 +51,21 @@ It then calculates the intermediate vector $\mathbf{u}'$ that is used to calcula
 $$
 \begin{aligned}
     \mathbf{t} = \frac{q\Delta t}{2m\gamma^-}\mathbf{B} \\
-    \mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t}
+    \mathbf{u}' = \mathbf{u}^{-} + \mathbf{u}^{-} \times \mathbf{t} \\
+    \mathbf{s} = \frac{2\mathbf{t}}{1+\mathbf{t}^2}
 \end{aligned}
 $$
 
 Where $\gamma^{-} = \sqrt{1+\frac{(\mathbf{u}^{-})^2}{c^2}}$.
 
-Next, 
-    
+Next, it performs the rotation (see `docs\borisderivation.md` for proof):
+
+$$
+\begin{aligned}
+    \mathbf{u}^{+} = \mathbf{u}^{-} + (\mathbf{u}' \times \mathbf{s})
+\end{aligned}
+$$
+
 And finally, it performs the second half-kick from the electric field to update the proper velocity:
 
 $$
@@ -92,7 +99,7 @@ We can also see how $\mathbf{|u|}$ is conserved through the rotation algorithm:
 
 $$
 \begin{aligned}
-    \mathbf{u}^{+}-\mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t}
+    \mathbf{u}^{+}-\mathbf{u}^{-} = (\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t} \\
     (\mathbf{u}^{+}-\mathbf{u}^{-}) \cdot (\mathbf{u}^{+} + \mathbf{u}^{-}) = ((\mathbf{u}^{+} + \mathbf{u}^{-}) \times \mathbf{t}) \cdot (\mathbf{u}^{+} + \mathbf{u}^{-}) \\
 \end{aligned}
 $$
@@ -119,7 +126,7 @@ $$
 
 Rather than $\frac{\omega_c \cdot \Delta t}{\gamma}$, where $\omega_c = \frac{q|\mathbf{B}|}{m}$, denoted as the Cyclotron frequency, and that error is the source of the bounded error we see when comparing to RK4.
 
-Implementation Notes to borisstep.py
+Implementation Notes to `borisstep.py`
 
 For accurate position updating, we have to adjust $\mathbf{u}$ by a half-step backwards in time before starting borisstep. This is because we want the velocity at the midpoint between $\Delta t_n$ and $\Delta t_{n+1}$, meaning to adjust $\mathbf{x}_{0} \to \mathbf{x}_{1}$, we want $\mathbf{u}_{\frac{1}{2}}$.
 That is, to update the position correctly, we actually compute:
@@ -169,7 +176,7 @@ Therefore, the guiding center of the particle's orbit is located at $(\rho, 0, 0
 
 $$
 \begin{aligned}
-    \mathbf{r} &= \sqrt{(x-\rho)^2 + y^2 + z^2} 
+    r &= \sqrt{(x-\rho)^2 + y^2 + z^2} 
 \end{aligned}
 $$
 
@@ -177,9 +184,15 @@ Which since the particle in this case does not move in the $z$ direction, simpli
 
 $$
 \begin{aligned}
-    \mathbf{r} &= \sqrt{(x-\rho)^2 + y^2} \\
+    r &= \sqrt{(x-\rho)^2 + y^2}
 \end{aligned}
 $$
 
 
- We see from the plot that the Boris Algorithm has a constant range of energy error independent of time, while RK4 starts off with a smaller error but gradually increases over time, which is why the Boris algorithm is preferred for long-term simulations of charged particle motion in magnetic fields. Plotting over longer gyroperiods (e.g 50000) will make the difference apparent.
+We see from the plot that the Boris Algorithm has a constant range of energy error independent of time, while RK4 starts off with a smaller error but gradually increases over time, which is why the Boris algorithm is preferred for long-term simulations of charged particle motion in magnetic fields. Plotting over longer gyroperiods (e.g 50000) will make the difference apparent.
+
+ $$
+\begin{aligned}
+    \mathbf{E} \times 
+\end{aligned}
+ $$
