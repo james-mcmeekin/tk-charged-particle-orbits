@@ -191,8 +191,24 @@ $$
 
 We see from the plot that the Boris Algorithm has a constant range of energy error independent of time, while RK4 starts off with a smaller error but gradually increases over time, which is why the Boris algorithm is preferred for long-term simulations of charged particle motion in magnetic fields. Plotting over longer gyroperiods (e.g 50000) will make the difference apparent.
 
- $$
+$\mathbf{E} \times \mathbf{B}$ drift:
+
+The program `ExBDrift.py` validates the boris step function by calculating the simulated drift of a particle within the presence of a strong electric field. The theoretical drift is (see `docs\ExBDriftDerivation.md`) is:
+
+$$
 \begin{aligned}
-    \mathbf{E} \times 
+    \mathbf{v}_{d,\perp} = \frac{\mathbf{E} \times \mathbf{B}}{\mathbf{B}^2}
 \end{aligned}
- $$
+$$
+
+In order to visualize the drift, the program does not use the $\mathbf{u}$ output from borisstep, since $\mathbf{u}$ is the particles instantaneous velocity, and we want to average over a number of gyroperiods. However, the boris algorithm rotates by $2\arctan(\omega_{c}\Delta t / 2)$ per steps, so a full gyroperiod is not an integer number of steps, and as a result over multiple periods, the simulation will stop a bit before a full cycle, and that leftover gyration term doesn't cancel which will be picked up when calculating $\mathbf{v}_{d}$, leading it to be less accurate (If you look at the plot of the `ExBDrift.py`, you will see that the period is not complete).
+
+Therefore, instead I derived $\mathbf{v}_{d}$ by a least squares regression using the boris numerical frequecy $\omega_{num}=2\arctan(\omega_{c}\Delta t / 2)/\Delta t$. Using the analytic frequency, $\omega_c$, changed the result by approximately 0.2%. Because the particles orbit is in nature circular, I chose the simulated regression fit to be:
+
+$$
+\begin{aligned}
+    \mathbf{x}(t) = \mathbf{x}_0 + \mathbf{v}_d(t) + A\cos(\omega_{num}t) + B\sin(\omega_{num}t)
+\end{aligned}
+$$
+
+With this format, $\mathbf{x}_0$ becomes the guiding center (labeled `gc0` in the program), which allows for the electron drift to be easily visualized.

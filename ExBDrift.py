@@ -37,12 +37,12 @@ t = dt * np.arange(nsteps + 1)
 v_drift_theory = np.cross(E, B) / np.dot(B, B)
 
 # measured: fit pos(t) = x0 + v_d*t + gyration. Boris rotates by 2*arctan(omega_c*dt/2) per step,
-# so the gyration uses this numerical frequency (a plain endpoint difference would leak phase error)
+# so the gyration uses this numerical frequency (a plain endpoint difference (e.g u from boris_step) would leak phase error into the drift)
 omega_num = 2 * np.arctan(omega_c * dt / 2) / dt
 A = np.column_stack([np.ones_like(t), t, np.cos(omega_num * t), np.sin(omega_num * t)])
 coef, *_ = np.linalg.lstsq(A, traj, rcond=None)    # one column per x,y,z
 v_drift_sim = coef[1]
-gc0 = coef[0]                                      # guiding center at t = 0
+gc0 = coef[0]                                      # guiding center
 
 print(f"theory    v_d = {v_drift_theory} m/s")
 print(f"simulated v_d = {v_drift_sim} m/s")
