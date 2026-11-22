@@ -10,8 +10,8 @@ c = 2.99792458e8         #speed of light, m/s
 #tokamak parameters
 B0 = 5.0                        # magnetic field strength at the center of the tokamak, T, scalar
 R0 = 1.7                        # major radius of tokamak (central axis to to center of plasma cross-section)
-q_safety = 2.0                  #safety factor, number of toroidal field lines per poloidal field lines                 
-E = np.array([0.0, 0.0, 0.0])
+q_safety = 2.0                  # safety factor, number of toroidal field lines per poloidal field lines                 
+E = np.array([0.0, 0.0, 0.0], dtype=float)  # electric field, V/m
 
 def B_tokamak(pos, B0=B0, R0=R0, q_safety = q_safety):
     x,y,z = pos
@@ -25,7 +25,7 @@ def B_tokamak(pos, B0=B0, R0=R0, q_safety = q_safety):
     B_x = B_R * x / R - B_phi * y / R
     B_y = B_R * y / R + B_phi * x / R
 
-    return np.array([B_x, B_y, B_z])
+    return np.array([B_x, B_y, B_z], dtype=float)
 
 
 #launch conditions
